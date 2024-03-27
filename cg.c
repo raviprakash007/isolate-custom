@@ -20,6 +20,7 @@
 static char cg_name[256];
 
 #define CG_BUFSIZE 1024
+#define path_max 1024
 
 static void
 cg_makepath(char *buf, size_t len, const char *attr)
@@ -43,7 +44,7 @@ cg_read(const char *attr, char *buf)
       maybe = 1;
     }
 
-  char path[PATH_MAX];
+  char path[path_max];
   cg_makepath(path, sizeof(path), attr);
 
   int fd = open(path, O_RDONLY);
@@ -98,7 +99,7 @@ cg_write(const char *attr, const char *fmt, ...)
   if (verbose > 1)
     msg("CG: Write %s = %s", attr, buf);
 
-  char path[PATH_MAX];
+  char path[path_max];
   cg_makepath(path, sizeof(path), attr);
 
   int fd = open(path, O_WRONLY | O_TRUNC);
@@ -129,7 +130,7 @@ fail:
 
 static FILE *cg_fopen(const char *attr)
 {
-  char path[PATH_MAX];
+  char path[path_max];
   cg_makepath(path, sizeof(path), attr);
 
   FILE *f = fopen(path, "r");
@@ -209,7 +210,7 @@ cg_prepare(void)
     return;
 
   struct stat st;
-  char path[PATH_MAX];
+  char path[path_max];
 
   cg_makepath(path, sizeof(path), NULL);
   if (stat(path, &st) >= 0 || errno != ENOENT)
@@ -306,7 +307,7 @@ cg_remove(void)
   if (!cg_enable)
     return;
 
-  char path[PATH_MAX];
+  char path[path_max];
   cg_makepath(path, sizeof(path), NULL);
 
   if (dir_exists(path))
